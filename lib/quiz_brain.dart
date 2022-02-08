@@ -36,8 +36,12 @@ class QuizBrain {
   bool getQuestionAnswer() => _questionBank[_questionNumber].questionAnswer;
 
   void nextQuestion() {
-    if (_questionNumber < _questionBank.length - 1) {
+    if (hasNext()) {
       _questionNumber++;
     }
   }
+
+  bool hasNext() => _questionNumber < _questionBank.length - 1;
+
+  void reset() => _questionNumber = 0;
 }

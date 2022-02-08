@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 
@@ -68,18 +69,22 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked true.
                 setState(() {
-                  if (quizBrain.getQuestionAnswer()) {
-                    scoreKeeper.add(Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ));
+                  if (quizBrain.hasNext()) {
+                    if (quizBrain.getQuestionAnswer()) {
+                      scoreKeeper.add(Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ));
+                    } else {
+                      scoreKeeper.add(Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ));
+                    }
+                    quizBrain.nextQuestion();
                   } else {
-                    scoreKeeper.add(Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ));
+                    showAlertAndCleanState();
                   }
-                  quizBrain.nextQuestion();
                 });
               },
             ),
@@ -100,18 +105,22 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked false.
                 setState(() {
-                  if (!quizBrain.getQuestionAnswer()) {
-                    scoreKeeper.add(Icon(
-                      Icons.check,
-                      color: Colors.green,
-                    ));
+                  if (quizBrain.hasNext()) {
+                    if (!quizBrain.getQuestionAnswer()) {
+                      scoreKeeper.add(Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ));
+                    } else {
+                      scoreKeeper.add(Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ));
+                    }
+                    quizBrain.nextQuestion();
                   } else {
-                    scoreKeeper.add(Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    ));
+                    showAlertAndCleanState();
                   }
-                  quizBrain.nextQuestion();
                 });
               },
             ),
@@ -122,6 +131,16 @@ class _QuizPageState extends State<QuizPage> {
         )
       ],
     );
+  }
+
+  void showAlertAndCleanState() {
+    Alert(
+            context: context,
+            title: "Finished!",
+            desc: "You've reached the end of the quiz.")
+        .show();
+    quizBrain.reset();
+    scoreKeeper = [];
   }
 }
 
